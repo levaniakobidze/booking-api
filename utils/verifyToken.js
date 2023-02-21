@@ -23,4 +23,33 @@ export const verifyToken = (req, res, next) => {
     next();
   });
 };
-export const verifyAdmin = (req, res, next) => {};
+
+export const verifyUser = (req, res, next) => {
+  verifyToken(req, res, () => {
+    if (req.user.id === req.params.id || req.user.isAdmin) {
+      next();
+    } else {
+      return next({
+        accsess: false,
+        status: 401,
+        message: "You are not authorized!",
+        stack: {},
+      });
+    }
+  });
+};
+export const verifyAdmin = (req, res, next) => {
+  verifyToken(req, res, () => {
+    console.log(req.user);
+    if (req.user.isAdmin) {
+      next();
+    } else {
+      return next({
+        accsess: false,
+        status: 401,
+        message: "You are not authorized!",
+        stack: {},
+      });
+    }
+  });
+};
